@@ -1,0 +1,283 @@
+  .calendarDetails {
+    display: grid;
+    grid-template-columns: 1fr 8fr 1fr;
+    gap: 10px;
+    background-color: white;
+    border-radius: 8px;
+    justify-content: space-around;
+    padding: 25px 15px;
+    width: 300px;
+    box-shadow: -2px 8px 17px -4px rgb(134, 133, 133);
+    -webkit-box-shadow: -2px 8px 17px -4px rgb(134, 133, 133);
+    -moz-box-shadow: -2px 8px 17px -4px rgb(134, 133, 133);
+  }
+
+  .selectedDate {
+    background-color: rgb(184, 118, 33);
+  }
+  
+  .gridFirstMonth {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    text-align: center;
+  }
+  
+  .gridFirstMonth p {
+    text-align: center;
+  }
+  
+  .gridSecondMonth {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    text-align: center;
+    width: 50%;
+    border-left: 0.1px solid rgb(0, 0, 0, 0.3);
+    padding: 0 25px 0 25px;
+  }
+  
+  .weekDays {
+    font-weight: bold;
+    color:#afafaf;
+  }
+  
+  .dayOfMonth {
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+    border: 1px solid transparent;
+    cursor: pointer;
+  }
+
+  .currentDay {
+    border-color: rgb(240, 87, 45);
+  }
+  .dayOfOtherMonth {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+    color: white;
+    border: 1px solid transparent;
+  }
+  
+  .month {
+    grid-column: span 7;
+    color:#494949
+  }
+  
+  .changeMonthButton {
+    width: 37px;
+    height: 37px;
+    border-radius: 50%;
+    border: none;
+    background-color: #f0572d;
+    align-self: center;
+    box-shadow: -2px 4px 5px -4px rgb(134, 133, 133);
+    -webkit-box-shadow: -2px 4px 5px -4px rgb(134, 133, 133);
+    -moz-box-shadow: -2px 4px 5px -4px rgb(134, 133, 133);
+  }
+  
+  .changeMonthButton:hover {
+    cursor: pointer;
+  }
+  
+  .changeMonthButton > svg > * {
+    color: #fff;
+  }
+  
+  .available:hover {
+    background-color: rgb(0, 0, 0, 0.3);
+  }
+  
+  .assisted {
+    background-color: #f0572d;
+    color: #fff
+  }
+  
+  .selected {
+    border: 1px dashed #f0572d;
+    /* border: 1px solid black; */
+    color: #000000;
+    width: 60%;
+    min-width: 25px;
+    height: 90%;
+    border-radius: 50%;
+    justify-self: center;
+    align-self: center;
+  }
+  
+  .clearDate {
+    display: none;
+  }
+  
+  .hideClearDate {
+    display: none;
+  }
+  
+  .rangeLimits {
+    background-color: #f0572d;
+    color: white;
+    width: 60%;
+    min-width: 25px;
+    height: 90%;
+    border-radius: 50%;
+    justify-self: center;
+    align-self: center;
+  }
+  
+  .reservationButton {
+    display: flex;
+    align-items: center;
+    height: 40px;
+    border: none;
+    border-radius: 5px;
+    background-color: #f0572d;
+    box-shadow: -2px 4px 5px -4px rgb(134, 133, 133);
+    -webkit-box-shadow: -2px 4px 5px -4px rgb(134, 133, 133);
+    -moz-box-shadow: -2px 4px 5px -4px rgb(134, 133, 133);
+  }
+  
+  .reservationButton:hover {
+    cursor: pointer;
+    background-color: #e78c73;
+  }
+  
+  .changeMonthButton:hover {
+    background-color: #e78c73;
+  }
+  
+  .changeMonthButton:active {
+    box-shadow: 0 5px #82818163;
+    transform: translateY(2px);
+  }
+  
+  .fadeIn {
+    animation-name: fade-in;
+    animation-duration: 1.5s;
+  }
+  
+  .fadeOut {
+    animation-name: fade-out;
+    animation-duration: 1s;
+  }
+  
+  @keyframes fade-in {
+    from {
+      opacity: 0.2;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  @keyframes fade-out {
+    from {
+      opacity: 0.2;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  
+  .today {
+    border-bottom: #f0572d solid 2px;
+  }
+  
+  .detailsChar {
+    padding: 25px 50px;
+  }
+  
+  .featuresBody {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-rows: 1fr 1fr;
+  }
+  
+  .featureIcons {
+    display: flex;
+    gap: 10px;
+    height: 50px;
+    font-weight: bold;
+    align-items: center;
+  }
+  
+  .iconName {
+    display: inline-block;
+  }
+  
+  .featureIcons > span {
+    display: inline-block;
+  }
+  
+  .featureIcons > svg > * {
+    color: #f0572d;
+  }
+  
+  .favIcon {
+    font-size: 25px;
+    animation: pulse 0.7s infinite;
+    cursor: pointer;
+  }
+  
+  .favIcon > path:hover {
+    color: rgb(236, 153, 130);
+  }
+  
+  @keyframes pulse {
+    10% {
+      transform: scale(1.1);
+    }
+  }
+  
+  .full-false > path {
+    color: rgb(0, 0, 0);
+  }
+  
+  .full-true > path {
+    color: rgb(240, 87, 45);
+  }
+  
+  /* Policies */
+  
+  .detailPolicies {
+    display: grid;
+    grid-template-columns: repeat(3, auto);
+    min-height: 5 00px;
+    padding: 50px 50px;
+    font-weight: bold;
+    font-size: 16px;
+    grid-gap: 25px;
+  }
+  
+  .detailPolicies h3 {
+    padding-bottom: 25px;
+    font-size: 22px;
+  }
+  
+  .detailRules {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .rulesBody {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .securityBody {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .cancellationBody {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .full {
+    color: rgb(240, 87, 45);
+  }

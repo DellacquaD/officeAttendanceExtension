@@ -1,0 +1,20 @@
+{
+  "manifest_version": 3,
+  "name": "Office Assistance",
+  "version": "0.0.1",
+  "description": "Eextension to register days attended to the office",
+  "action": {
+    "default_popup": "index.html",
+    "default_title": "Open",
+    "default_icon": "logo.png"
+  },
+  "permissions": ["scripting", "storage"],
+  "host_permissions": [
+    "http://*/",
+    "https://*/",
+    "<all_urls>"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  }
+}
