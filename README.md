@@ -1,2 +1,0 @@
-# chromeTest
-Chrome extension test

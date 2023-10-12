@@ -47,6 +47,9 @@ function addSelectedDate(date) {
 
     // Actualiza la copia local
     localSelectedDates = selectedDates;
+
+    // Envía un mensaje a los componentes React para informarles sobre el cambio
+    informComponentsAboutChange(selectedDates);
   });
 }
 
@@ -69,7 +72,15 @@ function removeSelectedDate(date) {
 
       // Actualiza la copia local
       localSelectedDates = selectedDates;
+
+      // Envía un mensaje a los componentes React para informarles sobre el cambio
+      informComponentsAboutChange(selectedDates);
     }
   });
+}
 
+// Función para informar a los componentes React sobre el cambio en las fechas seleccionadas
+function informComponentsAboutChange(selectedDates) {
+  const port = chrome.runtime.connect({ name: "calendarPort" });
+  port.postMessage({ action: "updateDates", selectedDates });
 }

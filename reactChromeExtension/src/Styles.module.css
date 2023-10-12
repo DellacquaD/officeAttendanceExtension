@@ -58,7 +58,7 @@
     justify-content: center;
     align-items: center;
     border-radius: 5px;
-    color: white;
+    color: rgb(202, 202, 202);
     border: 1px solid transparent;
   }
   
@@ -107,177 +107,13 @@
     justify-self: center;
     align-self: center;
   }
-  
-  .clearDate {
-    display: none;
+
+
+  .counter {
+    color: black;
+    grid-column: 1/3;
   }
-  
-  .hideClearDate {
-    display: none;
-  }
-  
-  .rangeLimits {
-    background-color: #f0572d;
-    color: white;
-    width: 60%;
-    min-width: 25px;
-    height: 90%;
-    border-radius: 50%;
-    justify-self: center;
-    align-self: center;
-  }
-  
-  .reservationButton {
-    display: flex;
-    align-items: center;
-    height: 40px;
+
+  input {
     border: none;
-    border-radius: 5px;
-    background-color: #f0572d;
-    box-shadow: -2px 4px 5px -4px rgb(134, 133, 133);
-    -webkit-box-shadow: -2px 4px 5px -4px rgb(134, 133, 133);
-    -moz-box-shadow: -2px 4px 5px -4px rgb(134, 133, 133);
-  }
-  
-  .reservationButton:hover {
-    cursor: pointer;
-    background-color: #e78c73;
-  }
-  
-  .changeMonthButton:hover {
-    background-color: #e78c73;
-  }
-  
-  .changeMonthButton:active {
-    box-shadow: 0 5px #82818163;
-    transform: translateY(2px);
-  }
-  
-  .fadeIn {
-    animation-name: fade-in;
-    animation-duration: 1.5s;
-  }
-  
-  .fadeOut {
-    animation-name: fade-out;
-    animation-duration: 1s;
-  }
-  
-  @keyframes fade-in {
-    from {
-      opacity: 0.2;
-    }
-    to {
-      opacity: 1;
-    }
-  }
-  @keyframes fade-out {
-    from {
-      opacity: 0.2;
-    }
-    to {
-      opacity: 1;
-    }
-  }
-  
-  .today {
-    border-bottom: #f0572d solid 2px;
-  }
-  
-  .detailsChar {
-    padding: 25px 50px;
-  }
-  
-  .featuresBody {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    grid-template-rows: 1fr 1fr;
-  }
-  
-  .featureIcons {
-    display: flex;
-    gap: 10px;
-    height: 50px;
-    font-weight: bold;
-    align-items: center;
-  }
-  
-  .iconName {
-    display: inline-block;
-  }
-  
-  .featureIcons > span {
-    display: inline-block;
-  }
-  
-  .featureIcons > svg > * {
-    color: #f0572d;
-  }
-  
-  .favIcon {
-    font-size: 25px;
-    animation: pulse 0.7s infinite;
-    cursor: pointer;
-  }
-  
-  .favIcon > path:hover {
-    color: rgb(236, 153, 130);
-  }
-  
-  @keyframes pulse {
-    10% {
-      transform: scale(1.1);
-    }
-  }
-  
-  .full-false > path {
-    color: rgb(0, 0, 0);
-  }
-  
-  .full-true > path {
-    color: rgb(240, 87, 45);
-  }
-  
-  /* Policies */
-  
-  .detailPolicies {
-    display: grid;
-    grid-template-columns: repeat(3, auto);
-    min-height: 5 00px;
-    padding: 50px 50px;
-    font-weight: bold;
-    font-size: 16px;
-    grid-gap: 25px;
-  }
-  
-  .detailPolicies h3 {
-    padding-bottom: 25px;
-    font-size: 22px;
-  }
-  
-  .detailRules {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .rulesBody {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-  }
-  
-  .securityBody {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-  }
-  
-  .cancellationBody {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-  }
-  
-  .full {
-    color: rgb(240, 87, 45);
   }

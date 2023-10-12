@@ -1,11 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { startOfMonth } from "date-fns/fp";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faChevronLeft,
-  faChevronRight,
-  faCircleXmark,
-} from "@fortawesome/free-solid-svg-icons";
+import { faChevronLeft, faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import { format } from "date-fns";
 
 const months = [
@@ -28,68 +24,81 @@ const days = ["D", "L", "M", "M", "J", "V", "S"];
 function Calendar({ styles }) {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [currentMonth, setCurrentMonth] = useState(new Date().getMonth() + 1);
-  const [nextMonth, setNextMonth] = useState(new Date().getMonth() + 2);
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
-  const [changeMonth, setChangeMonth] = useState(false);
   const [selectedDates, setSelectedDates] = useState([]);
-  const [localSelectedDates, setLocalSelectedDates] = useState([]);
   const [selectedCount, setSelectedCount] = useState(0);
-
-  const updateSelectedCount = (count) => {
-    setSelectedCount(count);
-  };
-
   const today = format(new Date(currentDate), "yyyy/MM/dd");
+  const [daysCommunicated, setDaysCommunicated] = useState("");
+  const currentYearMonthKey = `${currentYear}/${currentMonth}`;
+  const inputValue = daysCommunicated[currentYearMonthKey] || "";
+
 
   useEffect(() => {
-    // Se conecta al background.js para obtener los datos iniciales
     const port = chrome.runtime.connect({ name: "calendarPort" });
-    port.onMessage.addListener((message) => {
+    port.onMessage.addListener(async (message) => {
       if (message.action === "initialData") {
-        const selectedDates = message.selectedDates || [];
-        setLocalSelectedDates(selectedDates); // Actualiza la copia local
-        setSelectedDates(selectedDates); // Actualiza el estado
+        const selectedDatesArray = Object.values(message.selectedDates || {});
+        setSelectedDates(selectedDatesArray);
+        updateSelectedCount(selectedDatesArray);
       }
     });
+  
+    // Obtén los datos de daysCommunicated desde el almacenamiento local
+    chrome.storage.local.get({ daysCommunicated: {} }, function (result) {
+      const daysCommunicatedObject = result.daysCommunicated || {};
+      setDaysCommunicated(daysCommunicatedObject);
+  
+      // Envía los datos a tu componente de React
+      port.postMessage({
+        action: "setDaysCommunicated",
+        data: daysCommunicatedObject,
+      });
+    });
   }, []);
+  
+  useEffect(() => {
+    const dateRangeStart = format(new Date(currentYear, currentMonth - 1, 1), "yyyy/MM/dd");
+    const dateRangeEnd = format(new Date(currentYear, currentMonth, 0), "yyyy/MM/dd");
+    const filteredDates = selectedDates.filter((date) => {
+      return date >= dateRangeStart && date <= dateRangeEnd;
+    });
+    const selectedCount = filteredDates.length;
+    setSelectedCount(selectedCount);
+  }, [currentMonth, currentYear, selectedDates]);
+
+  const updateSelectedCount = (dates) => {
+    const selectedCount = dates.length;
+    setSelectedCount(selectedCount);
+  };
+
+  let selectedDateFormatted = ""; // Declarar la variable fuera de handleSelectDate
 
   const handleSelectDate = (day) => {
-    const selectedDateFormatted = format(
+    selectedDateFormatted = format(
       new Date(currentYear, currentMonth - 1, day),
       "yyyy/MM/dd"
     );
   
     let updatedDates = [...selectedDates];
-
-    // Si la fecha ya está seleccionada, la eliminamos de la lista
-    if (selectedDates.includes(selectedDateFormatted)) {
-      updatedDates = selectedDates.filter(
-        (date) => date !== selectedDateFormatted
-      );
-
-      // Envía el mensaje al script de fondo para eliminar la fecha
-      chrome.runtime.sendMessage({
-        action: "removeDate",
-        date: selectedDateFormatted,
-      });
+  
+    if (updatedDates.includes(selectedDateFormatted)) {
+      // El día ya está seleccionado, quítalo del array
+      updatedDates = updatedDates.filter((date) => date !== selectedDateFormatted);
     } else {
-      // Si la fecha no está seleccionada, la agregamos a la lista
+      // El día no está seleccionado, agrégalo al array
       updatedDates.push(selectedDateFormatted);
-
-      // Envía el mensaje al script de fondo para agregar la fecha
-      chrome.runtime.sendMessage({
-        action: "addDate",
-        date: selectedDateFormatted,
-      });
     }
-
-    // Actualiza el estado local con las fechas actualizadas
+  
     setSelectedDates(updatedDates);
-
-    // Actualiza el contador de días seleccionados
-    setSelectedCount(updatedDates.length);
+  
+    chrome.runtime.sendMessage({
+      action: "updateDates",
+      dates: updatedDates,
+    });
+  
+    updateSelectedCount(updatedDates);
   };
-
+  
   const getDaysInAMonth = (year, month) => {
     return new Date(year, month, 0).getDate();
   };
@@ -101,38 +110,44 @@ function Calendar({ styles }) {
   };
 
   const followingMonth = () => {
-    if (currentMonth < 12 && nextMonth < 12) {
+    if (currentMonth < 12) {
       setCurrentMonth((prev) => prev + 1);
-      setNextMonth((prev) => prev + 1);
     } else {
       setCurrentMonth(1);
-      setNextMonth(2);
       setCurrentYear((prev) => prev + 1);
     }
-    toggleAnimation();
   };
 
   const prevMonth = () => {
-    if (currentMonth > 1 && nextMonth > 1) {
+    if (currentMonth > 1) {
       setCurrentMonth((prev) => prev - 1);
-      setNextMonth((prev) => prev - 1);
     } else {
-      setCurrentMonth(11);
-      setNextMonth(12);
+      setCurrentMonth(12);
       setCurrentYear((prev) => prev - 1);
     }
-    toggleAnimation();
   };
 
   const completeCalendar = (month, year) => {
-    return 42 - getStartOfMonth(year, month) - getDaysInAMonth(year, month);
+    return 35 - getStartOfMonth(year, month) - getDaysInAMonth(year, month);
   };
 
-  const toggleAnimation = () => {
-    setChangeMonth(!changeMonth);
+
+  const handleSaveDays = () => {
+    const updatedDaysCommunicated = { ...daysCommunicated };
+    chrome.runtime.sendMessage({
+      action: "updateDaysCommunicated",
+      data: updatedDaysCommunicated,
+    });
   };
 
-  
+  const handleInputChange = (e) => {
+    const { value } = e.target;
+    setDaysCommunicated((prevDaysCommunicated) => ({
+      ...prevDaysCommunicated,
+      [currentYearMonthKey]: value,
+    }));
+  };
+
   return (
     <div className={styles.calendarLayout}>
       <div className={styles.calendarDetails}>
@@ -142,11 +157,6 @@ function Calendar({ styles }) {
         >
           <FontAwesomeIcon icon={faChevronLeft}></FontAwesomeIcon>
         </button>
-
-
-
-
-
         <div className={styles.gridFirstMonth}>
           <div className={styles.month}>
             <h4>
@@ -163,30 +173,24 @@ function Calendar({ styles }) {
           }).map((_, i) => (
             <p key={i}></p>
           ))}
-          {Array.from({
-            length: getDaysInAMonth(currentYear, currentMonth),
-          }).map((_, i) => (
+          {Array.from({ length: getDaysInAMonth(currentYear, currentMonth) }).map((_, i) => {
+          const day = i + 1;
+          const dateToCheck = format(new Date(currentYear, currentMonth - 1, day), "yyyy/MM/dd");
+
+          return (
             <p
               className={`${styles.dayOfMonth} ${
-                format(
-                  new Date(currentYear, currentMonth - 1, i + 1),
-                  "yyyy/MM/dd"
-                ) === today
+                format(new Date(currentYear, currentMonth - 1, day), "yyyy/MM/dd") === today
                   ? styles.currentDay
                   : ""
-              } ${
-                selectedDates.includes(
-                  format(new Date(currentYear, currentMonth - 1, i + 1), "yyyy/MM/dd")
-                )
-                  ? styles.assisted
-                  : ""
-              }`}
-              onClick={() => handleSelectDate(i + 1)}
+              } ${selectedDates.includes(dateToCheck) ? styles.assisted : ""}`}
+              onClick={() => handleSelectDate(day)}
               key={i}
             >
-              {i + 1}
+              {day}
             </p>
-          ))}
+          );
+        })}
           {Array.from({
             length: completeCalendar(currentMonth, currentYear),
           }).map((_, i) => (
@@ -196,11 +200,24 @@ function Calendar({ styles }) {
           ))}
         </div>
         <button
-          className={styles.changeMonthButton + " " + styles.right}
           onClick={followingMonth}
+          className={styles.changeMonthButton + " " + styles.right}
         >
           <FontAwesomeIcon icon={faChevronRight}></FontAwesomeIcon>
         </button>
+        <div className={styles.counter}>
+          <span>Dias totales: </span>
+          <span>
+          <input
+            type="text"
+            placeholder="Días comunicados"
+            value={inputValue}
+            onChange={handleInputChange}
+            onBlur={handleSaveDays}
+          />
+          </span>
+          <p>Asistencia: {selectedCount} días</p>
+        </div>
       </div>
     </div>
   );
